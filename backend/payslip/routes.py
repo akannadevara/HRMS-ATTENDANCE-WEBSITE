@@ -15,6 +15,15 @@ def upload_payslip():
     month = request.form.get("month")
     year = request.form.get("year")
 
+    # Salary values from Node.js
+    gross_salary = request.form.get("gross_salary", 0)
+    deductions = request.form.get("deductions", 0)
+    net_salary = request.form.get("net_salary", 0)
+
+    print("Gross Salary:", gross_salary)
+    print("Deductions:", deductions)
+    print("Net Salary:", net_salary)
+
     pdf = request.files.get("pdf")
 
     if not email or not pdf:
@@ -47,13 +56,24 @@ def upload_payslip():
     cursor.execute(
         """
         INSERT INTO payslips
-        (user_id, month, year, pdf_file)
-        VALUES (%s, %s, %s, %s)
+        (
+            user_id,
+            month,
+            year,
+            gross_salary,
+            deductions,
+            net_salary,
+            pdf_file
+        )
+        VALUES (%s,%s,%s,%s,%s,%s,%s)
         """,
         (
             user["id"],
             month,
             year,
+            gross_salary,
+            deductions,
+            net_salary,
             pdf_data
         )
     )
@@ -67,8 +87,6 @@ def upload_payslip():
         "success": True,
         "message": "Payslip Saved Successfully"
     })
-
-
 # ----------------------------
 # List Logged-in User Payslips
 # ----------------------------
@@ -81,15 +99,28 @@ def list_payslips():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute(
-        """
-        SELECT id, month, year, created_at
-        FROM payslips
-        WHERE user_id=%s
-        ORDER BY created_at DESC
-        """,
-        (session["user_id"],)
-    )
+    # cursor.execute(
+    #     """
+    #     SELECT id, month, year, created_at
+    #     FROM payslips
+    #     WHERE user_id=%s
+    #     ORDER BY created_at DESC
+    #     """,
+    #     (session["user_id"],)
+    # )
+    cursor.execute("""
+    SELECT
+        id,
+        month,
+        year,
+        net_salary,
+        gross_salary,
+        deductions,
+        created_at
+    FROM payslips
+    WHERE user_id=%s
+    ORDER BY created_at DESC
+""", (session["user_id"],))
 
     payslips = cursor.fetchall()
 
@@ -137,4 +168,34 @@ def download_payslip(payslip_id):
         mimetype="application/pdf",
         as_attachment=True,
         download_name=f"{payslip['month']}_{payslip['year']}.pdf"
+    )
+
+@payslip_bp.route("/view/<int:payslip_id>")
+def view_payslip(payslip_id):
+
+    if "user_id" not in session:
+        return "Unauthorized", 401
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT pdf_file
+        FROM payslips
+        WHERE id=%s
+        AND user_id=%s
+    """, (payslip_id, session["user_id"]))
+
+    row = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if not row:
+        return "Not Found", 404
+
+    return send_file(
+        io.BytesIO(row["pdf_file"]),
+        mimetype="application/pdf",
+        as_attachment=False
     )

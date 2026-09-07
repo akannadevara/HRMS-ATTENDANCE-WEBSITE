@@ -93,11 +93,11 @@
         </nav>
 
         <main class="main-content" id="mainContent" style="display:block;">
-            <div class="header">
-                <h1>Welcome, {{ session.username }}</h1>
-                <button class="toggle-btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
-                    aria-controls="sidebar"><i class="fas fa-bars"></i></button>
-            </div>
+            <div class="header" id="globalHeader">
+    <h1 id="globalWelcome">Welcome, {{ session.username }}</h1>
+    <button class="toggle-btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
+        aria-controls="sidebar"><i class="fas fa-bars"></i></button>
+</div>
 
             <div class="flash-messages">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -877,39 +877,133 @@
                     {% endif %}
                 </div>
             </section>
-        </main>
 
-        <section class="content-section" id="payslips">
+            <section class="content-section" id="payslips">
 
-    <div class="card">
-
-        <h3>My Payslips</h3>
-
-        <table class="table table-bordered">
-
-            <thead>
-
-                <tr>
-
-                    <th>Month</th>
-
-                    <th>Year</th>
-
-                    <th>Download</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="payslipTable">
-
-            </tbody>
-
-        </table>
-
+    <!-- Welcome (only visible inside this section) -->
+    <div class="ps-welcome">
+        <h2 class="ps-welcome-title">Welcome back, {{ session.username }} 👋</h2>
+        <p class="ps-welcome-sub">Here's what's happening with your payslips today.</p>
     </div>
 
+    <!-- Stats -->
+    <div class="ps-stats-row">
+        <div class="ps-stat-card">
+            <div class="ps-stat-icon blue"><i class="fas fa-file-alt"></i></div>
+            <div>
+                <div class="ps-stat-value" id="ps-total-count">0</div>
+                <div class="ps-stat-label">Total Payslips</div>
+                <div class="ps-stat-hint">Available documents</div>
+            </div>
+        </div>
+        <div class="ps-stat-card">
+            <div class="ps-stat-icon green"><i class="fas fa-calendar-alt"></i></div>
+            <div>
+                <div class="ps-stat-value" id="ps-year">2026</div>
+                <div class="ps-stat-label">Year</div>
+                <div class="ps-stat-hint">Current year</div>
+            </div>
+        </div>
+        <div class="ps-stat-card">
+            <div class="ps-stat-icon purple"><i class="fas fa-wallet"></i></div>
+            <div>
+                <div class="ps-stat-value" id="ps-latest">—</div>
+                <div class="ps-stat-label">Latest Payslip</div>
+                <div class="ps-stat-hint" id="ps-latest-month">—</div>
+            </div>
+        </div>
+        <div class="ps-stat-card">
+            <div class="ps-stat-icon orange"><i class="fas fa-chart-line"></i></div>
+            <div>
+                <div class="ps-stat-value" id="ps-earnings">—</div>
+                <div class="ps-stat-label">Total Earnings</div>
+                <div class="ps-stat-hint">Year to date</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="ps-grid">
+        <!-- Table Card -->
+        <div class="ps-main-card">
+            <div class="ps-card-header">
+                <h3><i class="fas fa-file-invoice-dollar me-2"></i>My Payslips</h3>
+                <div class="ps-year-select">
+                    <i class="fas fa-calendar"></i>
+                    <select id="ps-year-filter">
+                        <option value="2026">2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="ps-table">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Net Salary (₹)</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payslipTable">
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">Loading payslips…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="ps-table-footer">
+                <button class="ps-view-all" type="button">View All Payslips <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="ps-side-card">
+                <h4 class="ps-side-title">Quick Actions</h4>
+                <div class="ps-actions">
+                    <button class="ps-action-btn" type="button" data-goto="leaves">
+                        <i class="fas fa-calendar-plus"></i> Apply Leave
+                    </button>
+                    <button class="ps-action-btn" type="button" data-goto="attendance">
+                        <i class="fas fa-clock"></i> View Attendance
+                    </button>
+                    <button class="ps-action-btn" type="button" data-goto="daily-tasks">
+                        <i class="fas fa-tasks"></i> My Tasks
+                    </button>
+                    <button class="ps-action-btn" type="button" data-goto="policies">
+                        <i class="fas fa-file-alt"></i> Company Policies
+                    </button>
+                </div>
+            </div>
+
+            <!-- Holiday -->
+            <div class="ps-side-card">
+                <h4 class="ps-side-title">Upcoming Holiday</h4>
+                {% if latest_holiday %}
+                <div class="ps-holiday">
+                    <div class="ps-holiday-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div>
+                        <div class="ps-holiday-name">{{ latest_holiday.holiday_name }}</div>
+                        <div class="ps-holiday-date">{{ latest_holiday.holiday_date.strftime('%d %B %Y') }}</div>
+                        <span class="ps-holiday-badge">Upcoming</span>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0 small">No upcoming holidays</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </section>
+        </main>
+
+  
     </div>
 
     <!-- Bootstrap 5 JS -->

@@ -1496,3 +1496,331 @@ body {
     font-size: 15px;
     font-weight: 600;
 }
+
+/* ========== FIX LAYOUT FOR PAYSLIPS ========== */
+#payslips {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 4px;
+    box-sizing: border-box;
+}
+
+/* Hide the global header when on payslips */
+body.payslips-active #globalHeader {
+    display: none !important;
+}
+
+/* Make main content take full remaining width */
+.main-content {
+    width: calc(100% - 260px);   /* adjust if your sidebar width is different */
+    margin-left: 260px;
+    padding: 24px 28px;
+    box-sizing: border-box;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+/* When sidebar is collapsed / mobile */
+@media (max-width: 991px) {
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* ========== PAYSLIPS UI ========== */
+.ps-welcome {
+    margin-bottom: 22px;
+}
+.ps-welcome-title {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 4px;
+}
+.ps-welcome-sub {
+    color: #64748b;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.ps-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 22px;
+}
+.ps-stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.ps-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+.ps-stat-icon.blue   { background: #3b82f6; }
+.ps-stat-icon.green  { background: #10b981; }
+.ps-stat-icon.purple { background: #8b5cf6; }
+.ps-stat-icon.orange { background: #f59e0b; }
+
+.ps-stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.15;
+}
+.ps-stat-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #334155;
+}
+.ps-stat-hint {
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.ps-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 18px;
+    align-items: start;
+}
+
+.ps-main-card,
+.ps-side-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.ps-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f5f9;
+}
+.ps-card-header h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.ps-year-select {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 5px 11px;
+    font-size: 0.88rem;
+}
+.ps-year-select select {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+}
+
+.ps-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.ps-table th {
+    text-align: left;
+    padding: 13px 18px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #64748b;
+    background: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+}
+.ps-table td {
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    color: #334155;
+    border-bottom: 1px solid #f8fafc;
+    vertical-align: middle;
+}
+.ps-table tr:last-child td {
+    border-bottom: none;
+}
+.ps-table tr:hover td {
+    background: #f8fafc;
+}
+
+.ps-status {
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.ps-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    background: #2563eb;
+    color: #fff !important;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    transition: background 0.15s;
+}
+.ps-download-btn:hover {
+    background: #1d4ed8;
+    color: #fff;
+}
+
+.ps-table-footer {
+    padding: 13px 18px;
+    text-align: center;
+    border-top: 1px solid #f1f5f9;
+}
+.ps-view-all {
+    background: none;
+    border: none;
+    color: #2563eb;
+    font-weight: 500;
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+.ps-view-all:hover {
+    text-decoration: underline;
+}
+
+/* Side cards */
+.ps-side-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.ps-side-card {
+    padding: 18px;
+}
+.ps-side-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 14px;
+}
+
+.ps-profile {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.ps-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.ps-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.ps-name { font-weight: 600; color: #0f172a; }
+.ps-role { font-size: 0.83rem; color: #64748b; }
+.ps-meta { font-size: 0.78rem; color: #94a3b8; margin-top: 1px; }
+
+.ps-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+.ps-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 12px 6px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 11px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.ps-action-btn i {
+    font-size: 1.05rem;
+    color: #3b82f6;
+}
+.ps-action-btn:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.ps-holiday {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.ps-holiday-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #dcfce7;
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+.ps-holiday-name { font-weight: 600; color: #0f172a; }
+.ps-holiday-date { font-size: 0.83rem; color: #64748b; margin: 2px 0 5px; }
+.ps-holiday-badge {
+    display: inline-block;
+    background: #dcfce7;
+    color: #16a34a;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .ps-stats-row { grid-template-columns: repeat(2, 1fr); }
+    .ps-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+    .ps-stats-row { grid-template-columns: 1fr; }
+}
+
